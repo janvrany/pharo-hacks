@@ -1,6 +1,10 @@
 Class {
 	#name : #IOSelector,
 	#superclass : #Object,
+	#instVars : [
+		'reaper',
+		'reapActions'
+	],
 	#classVars : [
 		'Current'
 	],
@@ -72,4 +76,69 @@ IOSelector >> readWait: fd [
 	] repeat.
 	
 	
+]
+
+{ #category : #reaping }
+IOSelector >> reap: pid with: action [
+	"Arrange for reaping of Unix process with given pid.
+	 Evaluate `action` once the process terminates". 
+	
+	reapActions isNil ifTrue:[
+		reapActions := Dictionary new.
+	].
+
+	reapActions at: pid put: action.
+	
+	reaper isNil ifTrue:[
+		reaper := [ 
+			[
+				[ reapActions notNil and:[ reapActions notEmpty ] ] whileTrue:[
+					self reapOne.
+				].
+			] ensure: [ 
+				reaper := nil.
+			]
+		] newProcess.
+		reaper name: 'LibUnix process reaper'.
+		reaper priority: Processor userBackgroundPriority.
+		reaper resume.
+	].
+	
+	
+	
+]
+
+{ #category : #reaping }
+IOSelector >> reapOne [
+	"Wait for any process to be reaped and reap it, then return."
+	
+	"Implementation note: Here we simply poll. A better would be to wait
+	 for SIGCHLD but that interferes with OSSUnixSubprocess' reaper.
+	
+	 Really, this functionality should be in Pharo instead of letting
+	 everyone to roll its own implementation. How comes nobody sees that?"
+	
+	| wstatusPtr |
+	
+	wstatusPtr := FFIInt32 newBuffer.
+
+	[
+		reapActions isEmpty ifTrue:[ ^self ].	
+						
+		reapActions copy keysAndValuesDo: [ :pid :action |
+			| pidIfExited |
+		
+			pidIfExited := LibC waitpid: pid _: wstatusPtr _: 1"<- WNOHANG".
+			pidIfExited ~~ 0 ifTrue:[
+				| status |
+				
+				status := UnixProcessStatus pid: pid wstatus: (wstatusPtr unsignedLongAt: 1).
+				reapActions removeKey: pid.
+				action cull: status.
+				^self.
+			].
+		].
+	
+		(Delay forMilliseconds: 100) wait.10
+	] repeat
 ]
