@@ -9,8 +9,30 @@ AbstractBinaryFileStream >> fileDescriptor [
 ]
 
 { #category : #'*LibUnix' }
-AbstractBinaryFileStream >> setLocalEcho: aBoolean [
-	File setLocalEcho: handle to: aBoolean
+AbstractBinaryFileStream >> setLocalEcho: onOrOff [
+	| fd termios ec |
+	
+	fd := self fileDescriptor.
+	termios := Termios new.
+	
+	ec := LibC tcgetattr: fd _: termios getHandle.
+	ec == -1 ifTrue:[
+		self error: 'tcgetattr() failed!'.
+		^self.
+	].
+	onOrOff ifTrue:[ 
+		termios c_lflag: (termios c_lflag bitOr: UnixConstants ECHO)
+	] ifFalse:[ 
+		termios c_lflag: (termios c_lflag bitClear: UnixConstants ECHO)
+	].
+
+	ec := LibC tcsetattr: fd _: UnixConstants TCSANOW _: termios getHandle.
+	ec == -1 ifTrue:[
+		self error: 'tcgetattr() failed!'.
+		^self.
+	].                             
+
+	
 ]
 
 { #category : #'*LibUnix' }
@@ -24,6 +46,28 @@ AbstractBinaryFileStream >> setNonBuffered [
 ]
 
 { #category : #'*LibUnix' }
-AbstractBinaryFileStream >> setOutputCRLF: aBoolean [
-	File setOutputCRLF: handle to: aBoolean
+AbstractBinaryFileStream >> setOutputCRLF: onOrOff [ 
+	| fd termios ec |
+	
+	fd := self fileDescriptor.
+	termios := Termios new.
+	
+	ec := LibC tcgetattr: fd _: termios getHandle.
+	ec == -1 ifTrue:[
+		self error: 'tcgetattr() failed!'.
+		^self.
+	].
+	onOrOff ifTrue:[ 
+		termios c_oflag: (termios c_oflag bitOr: UnixConstants ONLCR)
+	] ifFalse:[ 
+		termios c_oflag: (termios c_oflag bitClear: UnixConstants ONLCR)
+	].
+
+	ec := LibC tcsetattr: fd _: UnixConstants TCSANOW _: termios getHandle.
+	ec == -1 ifTrue:[
+		self error: 'tcgetattr() failed!'.
+		^self.
+	].                             
+
+	
 ]
