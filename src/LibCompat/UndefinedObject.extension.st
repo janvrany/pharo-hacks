@@ -9,7 +9,6 @@ UndefinedObject >> ? anotherObject [
 UndefinedObject >> notEmptyOrNil [
 	"Return true if receiver is neither `nil` nor an empty collection."
 	^ false
-
 ]
 
 { #category : #'*LibCompat' }

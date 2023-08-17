@@ -6,6 +6,12 @@ Object >> ? anotherObject [
 ]
 
 { #category : #'*LibCompat' }
+Object >> notEmptyOrNil [
+	"Return true if receiver is neither `nil` nor an empty collection."
+	^ true
+]
+
+{ #category : #'*LibCompat' }
 Object >> objectAttributeAt: key [
 	| attrs |
 		
