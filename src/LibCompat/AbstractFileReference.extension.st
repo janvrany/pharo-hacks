@@ -6,6 +6,11 @@ AbstractFileReference >> asFilename [
 ]
 
 { #category : #'*LibCompat' }
+AbstractFileReference >> asString [
+	^self pathString
+]
+
+{ #category : #'*LibCompat' }
 AbstractFileReference >> baseName [
 	^ self basename
 ]
@@ -13,4 +18,9 @@ AbstractFileReference >> baseName [
 { #category : #'*LibCompat' }
 AbstractFileReference >> directory [
 	^ self parent
+]
+
+{ #category : #'*LibCompat' }
+AbstractFileReference >> pathName [
+	^ self pathString
 ]
