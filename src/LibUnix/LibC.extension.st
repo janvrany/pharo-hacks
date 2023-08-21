@@ -78,6 +78,12 @@ LibC class >> ioctl: fd _: request _: param [
 ]
 
 { #category : #'*LibUnix' }
+LibC class >> kill: pid _: sig [
+	^ self ffiCall:#(int kill(int pid, int sig))  module: LibC
+	
+]
+
+{ #category : #'*LibUnix' }
 LibC class >> open: pathname _: flags [
 	^ self ffiCall: #(int open(char* pathname, int flags)) module: LibC
 ]

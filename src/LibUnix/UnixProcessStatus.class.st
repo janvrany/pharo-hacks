@@ -37,6 +37,20 @@ UnixProcessStatus >> pid: pidValue wstatus: wstatusValue [
 	wstatus := wstatusValue 
 ]
 
+{ #category : #printing }
+UnixProcessStatus >> printOn: aStream [
+	super printOn: aStream.
+	aStream nextPutAll: '(pid '.
+	pid printOn: aStream.
+	aStream nextPutAll: ', '.
+	aStream nextPutAll: self status.
+	aStream nextPutAll: ' '.
+	self code printOn: aStream.
+	aStream nextPutAll: ')'.
+	
+	
+]
+
 { #category : #accessing }
 UnixProcessStatus >> status [
 	"return status as a Symbol;

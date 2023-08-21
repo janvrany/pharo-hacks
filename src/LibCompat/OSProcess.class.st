@@ -8,7 +8,9 @@ Class {
 	#name : #OSProcess,
 	#superclass : #Object,
 	#instVars : [
-		'process'
+		'command',
+		'pid',
+		'status'
 	],
 	#category : #LibCompat
 }
@@ -23,31 +25,41 @@ OSProcess class >> command: aString [
 
 { #category : #accesing }
 OSProcess >> command: aString [
-	process shellCommand: aString. 
+	command := aString
 	
 ]
 
 { #category : #initialization }
 OSProcess >> initialize [
-	process := OSSUnixSubprocess new.
+	(Smalltalk globals includesKey: #OSSUnixSubprocess) ifTrue:[
+		self error: 'OSSubProcess package loaded. OSSubProcess is incompatbile with LibCompat''s OSProcess implementation.'
+	].
 ]
 
 { #category : #testing }
 OSProcess >> isComplete [ 
-	^process isComplete
+	^status notNil
 ]
 
 { #category : #testing }
 OSProcess >> isRunning [ 
-	^process isRunning
+	^status isNil.
 ]
 
 { #category : #running }
 OSProcess >> startProcess [
-	process run
+	pid := Smalltalk os spawn: {'/bin/sh' . '-c' . command} stdin: Stdio stdin stdout: Stdio stdout stderr: Stdio stderr exit: [ :sts | status := sts. ].
 ]
 
 { #category : #'terminating child' }
 OSProcess >> terminate [
-	process terminate
+	pid isNil ifTrue:[
+		self error: 'Process not (yet) running'.
+		^ self.
+	].
+	status notNil ifTrue:[
+		self error: 'Process already terminated'.
+	].
+	LibC kill: pid _: 15"SIGTERM"
+	
 ]
