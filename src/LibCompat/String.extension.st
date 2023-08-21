@@ -62,7 +62,7 @@ String >> bindWithArguments: values [
 					self error:'Invalid wildcard at ', percent printString , ': % must be followed by number'			
 				].
 				arg := values at: indexOrName ifAbsent:[self error: 'Invalid wildcard at ', percent printString , ': value not found'].
-				output nextPutAll: arg displayString.		
+				output nextPutAll: arg asString.		
 			]
 		]		
 	].
