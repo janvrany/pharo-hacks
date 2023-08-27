@@ -74,3 +74,11 @@ String >> bindWithArguments: values [
 	"
 	
 ]
+
+{ #category : #'*LibCompat' }
+String >> upTo: aCharacter [
+	| pos |
+	
+	pos := self indexOf: aCharacter.
+	^self copyFrom: 1 to: pos - 1
+]
