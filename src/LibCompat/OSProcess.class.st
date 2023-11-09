@@ -48,7 +48,7 @@ OSProcess >> isRunning [
 
 { #category : #running }
 OSProcess >> startProcess [
-	pid := Smalltalk os spawn: {'/bin/sh' . '-c' . command} stdin: Stdio stdin stdout: Stdio stdout stderr: Stdio stderr exit: [ :sts | status := sts. ].
+	pid := Smalltalk os spawn: {'/bin/sh' . '-c' . command} stdin: nil stdout: nil stderr: nil exit: [ :sts | status := sts. ].
 ]
 
 { #category : #'terminating child' }
