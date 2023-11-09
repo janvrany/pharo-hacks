@@ -1,6 +1,9 @@
 Class {
 	#name : #MiniLogger,
 	#superclass : #Object,
+	#classVars : [
+		'AnyLoggerActive'
+	],
 	#category : #LibCompat
 }
 
@@ -9,6 +12,7 @@ MiniLogger class >> initialize [
 	(Smalltalk globals includesKey: #Logger) ifFalse:[
 		Smalltalk globals at: #Logger put: self
 	].
+	AnyLoggerActive := nil.
 
 	"
 	MiniLogger initialize 
@@ -16,7 +20,14 @@ MiniLogger class >> initialize [
 ]
 
 { #category : #logging }
-MiniLogger class >> log: message severity: severity facility: facility [
+MiniLogger class >> log: message severity: severity facility: facility [		
+	AnyLoggerActive isNil ifTrue:[
+		AnyLoggerActive := SignalLogger allSubInstances anySatisfy: #isRunning.
+		AnyLoggerActive ifFalse:[		
+			TranscriptLogger start.
+			AnyLoggerActive := true.
+		].
+	].	
 	StringSignal emit: message         
 ]
 
