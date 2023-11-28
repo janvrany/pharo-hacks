@@ -1,7 +1,6 @@
 Extension { #name : #UnixPlatform }
 
 { #category : #'*LibUnix' }
-{ #category : #'*LibUnix' }
 UnixPlatform >> spawn: argv stdin: stdin stdout: stdout stderr: stderr exit: action [ 
 	| pidptr argvptr actionsptr stdinFD stdoutFD stderrFD errno pid |
 	
