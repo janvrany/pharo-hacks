@@ -8,6 +8,8 @@ Currently available hacks:
 
  * *[LibUnix](src/LibUnix)* is a tiny library providing better integration with UNIX systems than what's available in stock Pharo. Currently it provides crude support spawning processes and long-running communication over pipes and PTYs.
 
+ * *[SUnit-Parametrized](src/SUnit-Parametrized)* is an extension to SUnit that allows one to easily write parametrized test. See [SUnit-Parametrized README](README-SUnit-Parametrized.md) for detais.
+
 ## Loading
 
 ```
@@ -20,6 +22,11 @@ Metacello new
    	baseline: 'LibUnix';
    	repository: 'github://janvrany/pharo-hacks';
    	load.
+
+Metacello new
+	baseline: 'SUnitParametrized';
+	repository: 'github://janvrany/pharo-hacks';
+	load.
 ```
 
 
