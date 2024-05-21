@@ -138,7 +138,7 @@ TestCaseParametrized >> parametersIterator [
 
     | method  methodParameters  strategy |
 
-    method := self class >> testSelector.
+    method := self class lookupSelector: testSelector.
     methodParameters := method pragmas
             select: [:pragma | #( #parameter:values: ) includes: pragma key ].
     methodParameters := methodParameters
