@@ -28,7 +28,7 @@ UnixPlatform >> spawn: argv stdin: stdin stdout: stdout stderr: stderr exit: act
 		LibC posix_spawn_file_actions_adddup2: actionsptr _: stderrFD _: 2.
 	].
 	
-	errno := LibC posix_spawn: pidptr _: argv first _: actionsptr getHandle _: nil _: argvptr getHandle _: nil.
+	errno := LibC posix_spawn: pidptr _: argv first _: actionsptr getHandle _: nil _: argvptr getHandle _: self environment environ getHandle.
 	errno ~~ 0 ifTrue:[
 		self error:'posix_spawn() has failed'.
 		^nil.
