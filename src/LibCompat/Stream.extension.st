@@ -1,6 +1,16 @@
 Extension { #name : #Stream }
 
 { #category : #'*LibCompat' }
+Stream >> isReadable [
+	^self subclassResponsibility 
+]
+
+{ #category : #'*LibCompat' }
+Stream >> isWritable [
+	^self subclassResponsibility 
+]
+
+{ #category : #'*LibCompat' }
 Stream >> nextPutAll: aCollection startingAt: startIndex to: stopIndex [
 	| count |
 	
