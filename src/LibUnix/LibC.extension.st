@@ -63,6 +63,11 @@ LibC class >> close: fd [
 ]
 
 { #category : #'*LibUnix' }
+LibC class >> fcntl: fd _: cmd _: arg [
+	^ self ffiCall:#( int fcntl(int fd, int cmd, int arg) )  module: LibC
+]
+
+{ #category : #'*LibUnix' }
 LibC class >> feof: stream [
 	^ self ffiCall: #( int feof( void* stream ) ) module: LibC  
 ]
