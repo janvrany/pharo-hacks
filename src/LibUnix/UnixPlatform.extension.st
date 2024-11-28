@@ -1,6 +1,40 @@
 Extension { #name : #UnixPlatform }
 
 { #category : #'*LibUnix' }
+UnixPlatform >> primForwardSignal: signalNumber toSemaphore: semaphoreIndex [
+	"Set a signal handler in the VM which will signal a Smalltalk semaphore at
+	semaphoreIndex whenever an external signal sigNum is received. Answer the
+	prior value of the signal handler. If semaphoreIndex is zero, the handler is
+	unregistered, and the VM returns to its default behavior for handling that
+	signal.
+
+	Use `Smalltalk >> #registerExternalObject:` to register a semaphore:
+
+		sema := Semaphore new.
+		index := Smalltalk registerExternalObject: sema.
+		Smalltalk os primForwardSignal: 10 toSemaphore: index.
+
+	The Smalltalk semaphore is expected to be kept at the same index location
+	indefinitely during the lifetime of a Squeak session. If that is not the case, the
+	handler must be unregistered prior to unregistering the Smalltalk semaphore.
+	"
+
+	<primitive: 'primitiveForwardSignalToSemaphore' module: 'UnixOSProcessPlugin'>
+	^ nil
+
+]
+
+{ #category : #'*LibUnix' }
+UnixPlatform >> primSemaIndexFor: sigNum [
+	"Answer the registration index of the semaphore currently associated with the
+	signal handler for sigNum."
+
+	<primitive: 'primitiveSemaIndexFor' module: 'UnixOSProcessPlugin'>
+	^ nil
+
+]
+
+{ #category : #'*LibUnix' }
 UnixPlatform >> spawn: argv stdin: stdin stdout: stdout stderr: stderr exit: action [ 
 	| pidptr argvptr actionsptr stdinFD stdoutFD stderrFD errno pid |
 	
