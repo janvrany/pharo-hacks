@@ -1,6 +1,26 @@
 Extension { #name : #SmalltalkImage }
 
 { #category : #'*LibCompat' }
+SmalltalkImage >> configuration [
+	"Return current configuration as GNU build triplet. 
+	 Currently, only 'x86_64-pc-linux-gnu' is supported"
+	| os | 
+	
+	os := self os. 
+	os subtype = 'x86_64' ifTrue:[
+		(os version beginsWith: 'linux') ifTrue:[
+			^'x86_64-pc-linux-gnu'
+		].
+	].
+
+	^self error:'Not yet supported configuration'.
+	
+	"
+	Smalltalk configuration 
+	"
+]
+
+{ #category : #'*LibCompat' }
 SmalltalkImage >> getPackageDirectoryForPackage: packageOrString [
   "Return a directory containing sources of given package or `nil` if
    it cannot be found.
