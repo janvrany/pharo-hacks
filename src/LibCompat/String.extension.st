@@ -76,6 +76,11 @@ String >> bindWithArguments: values [
 ]
 
 { #category : #'*LibCompat' }
+String >> tokensBasedOn:aCharacter [
+	^self substrings: { aCharacter }
+]
+
+{ #category : #'*LibCompat' }
 String >> upTo: aCharacter [
 	| pos |
 	
